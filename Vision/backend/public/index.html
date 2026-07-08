@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html lang="de">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>PulseBox Live Voting</title>
+    <style>
+        body { background-color: #0b0f19; color: #e2e8f0; font-family: 'Segoe UI', Arial, sans-serif; display: flex; flex-direction: column; align-items: center; padding: 2rem; margin: 0; }
+        h1 { color: #00ffcc; text-shadow: 0 0 12px rgba(0, 255, 204, 0.4); margin-bottom: 0.5rem; }
+        .subtitle { color: #94a3b8; margin-bottom: 2rem; }
+        .track-list { width: 100%; max-width: 500px; }
+        .track-card { background: #1e293b; padding: 1.2rem; margin-bottom: 1rem; border-radius: 10px; display: flex; justify-content: space-between; align-items: center; box-shadow: 0 4px 10px rgba(0,0,0,0.4); border: 1px solid #334155; transition: border 0.3s; }
+        .track-card:hover { border-color: #00ffcc; }
+        .track-info h3 { margin: 0; color: #f8fafc; font-size: 1.1rem; }
+        .track-info p { margin: 5px 0 0 0; color: #94a3b8; font-size: 0.9rem; }
+        .vote-section { display: flex; align-items: center; gap: 1.2rem; }
+        .vote-count { font-size: 1.4rem; font-weight: bold; color: #00ffcc; min-width: 30px; text-align: center; }
+        button { background: #00ffcc; color: #0b0f19; border: none; padding: 0.6rem 1.2rem; border-radius: 6px; font-weight: bold; cursor: pointer; transition: transform 0.1s, background-color 0.2s; }
+        button:hover { transform: scale(1.05); background: #00ccaa; }
+        button:active { transform: scale(0.95); }
+    </style>
+</head>
+<body>
+    <h1>🎵 PulseBox Live Voting</h1>
+    <p class="subtitle">Bieg die Gesetze der Physik – Stimme für deinen Track! ⚡️</p>
+    <div class="track-list" id="tracks-container"></div>
+    <script src="app.js"></script>
+</body>
+</html>
