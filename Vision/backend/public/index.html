@@ -19,11 +19,16 @@
         button:hover { transform: scale(1.05); background: #00ccaa; }
         button:active { transform: scale(0.95); }
     </style>
+    <!-- Socket.IO Client Script sauber im Head eingebunden -->
+    <script src="/socket.io/socket.io.js"></script>
 </head>
 <body>
     <h1>🎵 PulseBox Live Voting</h1>
-    <p class="subtitle">Bieg die Gesetze der Physik – Stimme für deinen Track! ⚡️</p>
+    <p class="subtitle">Bieg die Gesetze der Physik – Stimme für deinen Track! ⚡</p>
+    
     <div class="track-list" id="tracks-container"></div>
+
     <script src="app.js"></script>
 </body>
 </html>
+
