@@ -1,25 +1,31 @@
 const express = require('express');
-const app = express();
-const PORT = 3000;
+const http = require('http');
+const { Server } = require('socket.io');
 
-// Middleware, um JSON-Daten zu verstehen und den statischen Frontend-Ordner freizugeben
+const app = express();
+const server = http.createServer(app);
+const io = new Server(server);
+
+const PORT = process.env.PORT || 3000;
+
+// Middleware
 app.use(express.json());
 app.use(express.static('public'));
 
-// Unsere In-Memory-Datenbank für das Live-Voting
+// In-Memory Database (wird in späteren Sprints durch MongoDB ersetzt)
 let tracks = [
-    { id: 1, title: "Industrial Chaos", artist: "DarkTec", votes: 0 },
-    { id: 2, title: "Samba Speed", artist: "Van Harden", votes: 0 },
-    { id: 3, title: "Kebab Kontinuum (Uwe Remix)", artist: "PulseBox Crew", votes: 0 }
+    { id: 1, title: "Industrial Chaos", artist: "Van Harden", votes: 0 },
+    { id: 2, title: "Samba Speed", artist: "Artist", votes: 0 },
+    { id: 3, title: "Kebab Kontinuum (Uwe Remix)", artist: "Van Harden", votes: 0 }
 ];
 
-// 1. Status-API (unser Fundament)
+// 1. Status-API
 app.get('/api/status', (req, res) => {
     res.json({
         status: "online",
         project: "PulseBox",
-        version: "0.0.1-alpha",
-        message: "Backend läuft erfolgreich!"
+        version: "0.1.0-sprint2",
+        message: "Dark Tech Zentrale aktiv - WebSockets enabled!"
     });
 });
 
@@ -28,25 +34,33 @@ app.get('/api/tracks', (req, res) => {
     res.json(tracks);
 });
 
-// 3. POST: Für einen Track voten
+// 3. POST: Für einen Track voten (mit Echtzeit-Broadcast)
 app.post('/api/vote', (req, res) => {
     const { id } = req.body;
-    const track = tracks.find(t => t.id === parseInt(id));
+    const track = tracks.find(t => t.id === id);
 
     if (!track) {
         return res.status(404).json({ error: "Track nicht gefunden!" });
     }
 
-    // Vote hinzufügen
     track.votes += 1;
-
-    // Echtzeit-Sortierung: Meiste Votes fliegen sofort nach oben
     tracks.sort((a, b) => b.votes - a.votes);
 
-    // Aktualisierte Trackliste an das Frontend zurückfeuern
-    res.json({ success: true, message: `Stimme für ${track.title} gezählt!`, tracks });
+    // Echtzeit-Update an alle verbundenen Clients senden!
+    io.emit('update-tracks', tracks);
+
+    res.json({ success: true, tracks });
 });
 
-app.listen(PORT, () => {
-    console.log(`🎵 PulseBox-Server läuft auf Port ${PORT}`);
+// WebSocket Verbindung
+io.on('connection', (socket) => {
+    console.log('Ein Client hat sich mit der Dark Tech Zentrale verbunden:', socket.id);
+
+    socket.on('disconnect', () => {
+        console.log('Client getrennt:', socket.id);
+    });
+});
+
+server.listen(PORT, () => {
+    console.log(`Dark Tech Zentrale läuft auf Port ${PORT}`);
 });
