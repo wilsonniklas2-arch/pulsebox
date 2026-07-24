@@ -1,5 +1,9 @@
+// Verbindung zur Dark Tech Zentrale via WebSockets herstellen
+const socket = io();
+
 const container = document.getElementById('tracks-container');
 
+// Tracks beim Laden der Seite initial abrufen
 async function loadTracks() {
     try {
         const response = await fetch('/api/tracks');
@@ -10,8 +14,11 @@ async function loadTracks() {
     }
 }
 
+// Tracks auf der Oberfläche rendern
 function renderTracks(tracks) {
+    if (!container) return;
     container.innerHTML = '';
+    
     tracks.forEach(track => {
         const card = document.createElement('div');
         card.className = 'track-card';
@@ -21,14 +28,15 @@ function renderTracks(tracks) {
                 <p>${track.artist}</p>
             </div>
             <div class="vote-section">
-                <span class="vote-count">${track.votes}</span>
-                <button onclick="vote(${track.id})">🔥 Vote</button>
+                <span class="vote-count">🔥 ${track.votes}</span>
+                <button onclick="vote(${track.id})">Voten</button>
             </div>
         `;
         container.appendChild(card);
     });
 }
 
+// Vote abschicken
 async function vote(id) {
     try {
         const response = await fetch('/api/vote', {
@@ -37,12 +45,19 @@ async function vote(id) {
             body: JSON.stringify({ id })
         });
         const data = await response.json();
-        if (data.success) {
-            renderTracks(data.tracks);
+        if (!data.success) {
+            console.error("Fehler beim Voten");
         }
     } catch (error) {
         console.error("Fehler beim Senden des Votes:", error);
     }
 }
 
+// Live-Update empfangen von der Dark Tech Zentrale
+socket.on('update-tracks', (updatedTracks) => {
+    console.log('Live-Update empfangen!');
+    renderTracks(updatedTracks);
+});
+
+// Init beim Start
 loadTracks();

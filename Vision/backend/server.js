@@ -8,9 +8,12 @@ const io = new Server(server);
 
 const PORT = process.env.PORT || 3000;
 
+const path = require('path');
+
 // Middleware
 app.use(express.json());
-app.use(express.static('public'));
+// Neuer, sauberer Pfad für das Frontend im Root-Verzeichnis
+app.use(express.static(path.join(__dirname, '../public')));
 
 // In-Memory Database (wird in späteren Sprints durch MongoDB ersetzt)
 let tracks = [
