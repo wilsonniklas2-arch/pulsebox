@@ -13,7 +13,7 @@ const path = require('path');
 // Middleware
 app.use(express.json());
 // Neuer, sauberer Pfad für das Frontend im Root-Verzeichnis
-app.use(express.static(path.join(__dirname, '../public')));
+app.use(express.static(path.join(__dirname, '../../public')));
 
 // In-Memory Database (wird in späteren Sprints durch MongoDB ersetzt)
 let tracks = [
