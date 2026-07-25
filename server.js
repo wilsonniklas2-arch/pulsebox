@@ -7,7 +7,8 @@ const PORT = 3000;
 const DATA_FILE = path.join(__dirname, 'tracks.json');
 
 app.use(express.json());
-app.use(express.static('public'));
+app.use(express.static(__dirname + '/Vision/public'));
+
 
 // Hilfsfunktionen für das ewige Gedächtnis der Matrix
 function loadTracks() {
